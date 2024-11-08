@@ -1,0 +1,20 @@
+{
+  "manifest_version": 2,
+  "name": "Clean NAVER News",
+  "version": "1.0.0",
+
+  "description": "Eliminate comment of NAVER news",
+
+  "icons": {
+    "32": "icons/swearing.png",
+    "48": "icons/swearing.png"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["*://n.news.naver.com/*"],
+      "js": ["cnn.js"]
+    }
+  ]
+}
+
