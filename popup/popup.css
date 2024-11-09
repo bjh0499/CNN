@@ -1,0 +1,42 @@
+html, body {
+  width: 200px;
+  height: 100px;
+}
+
+.hidden {
+  display: none;
+}
+
+button {
+  border: none;
+  width: 45%;
+  height: 100%;
+  margin: 0 1%;
+  padding: 4px;
+  text-align: center;
+  font-size: 1.5em;
+  cursor: pointer;
+  background-color: #E5F2F2;
+}
+
+button:hover {
+  background-color: #CFF2F2;
+}
+
+button[type="reset"] {
+  background-color: #FBFBC9;
+}
+
+button[type="reset"]:hover {
+  background-color: #EAEA9D;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+}
+
+#popup-content {
+  width: 100%;
+  height: 100%;
+}
