@@ -11,8 +11,6 @@
       URI.indexOf("comic.naver.com/webtoon/detail") >= 0
     ) {
       document.querySelector("#cbox_module").style.visibility = "hidden";
-    } else if (URI.indexOf("mozilla.org") >= 0) {
-      document.querySelector("#outer-wrapper").style.visibility = "hidden";
     }
   }
 
@@ -23,8 +21,6 @@
       URI.indexOf("comic.naver.com/webtoon/detail") >= 0
     ) {
       document.querySelector("#cbox_module").style.visibility = "visible";
-    } else if (URI.indexOf("mozilla.org") >= 0) {
-      document.querySelector("#outer-wrapper").style.visibility = "visible";
     }
   }
 
