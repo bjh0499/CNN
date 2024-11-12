@@ -3,19 +3,27 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="color-scheme" content="dark light" />
+    <link rel="stylesheet" href="options.css" />
   </head>
 
   <body>
-    <p>storage.managed data: <b id="managed-data">no value found</b></p>
-    <form>
-      <label for="url">URL</label>
-      <input type="text" id="url" />
-      <br />
-      <label for="block">Block element</label>
-      <input type="text" id="block" />
-      <button type="submit">Save</button>
-    </form>
+    <div class="margin-5">
+      <label for="urlInput">URL</label><br />
+      <input id="urlInput" name="urlInput" type="text" />
+    </div>
+    <div class="margin-5">
+      <label for="elemInput">Block element selector</label><br />
+      <input id="elemInput" name="elemInput" type="text" />
+    </div>
+    <div class="margin-5">
+      <button id="addBlockButton">Add block element</button>
+      <button id="deleteAllButton">Clear all block elements</button>
+    </div>
+
+    <hr />
+
+    <div id="blockContainer"></div>
+
     <script src="options.js"></script>
   </body>
 </html>

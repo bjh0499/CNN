@@ -1,23 +1,32 @@
-async function saveOptions(e) {
-  e.preventDefault();
-  await browser.storage.sync.set({
-    url: document.querySelector("#url").value,
-    block: document.querySelector("#block").value,
-  });
+const urlInputDOM = document.querySelector("#urlInput");
+const elemInputDOM = document.querySelector("#elemInput");
+const blockContainerDOM = document.querySelector("#blockContainer");
+
+document.querySelector("#addBlockButton").addEventListener("click", addBlock);
+document.querySelector("#deleteAllButton").addEventListener("click", deleteAll);
+
+function onError(error) {
+  console.log(error);
 }
 
-async function restoreOptions() {
-  let res = await browser.storage.managed.get("url");
-  let url = res.url;
-  res = await browser.storage.managed.get("block");
-  let block = res.block;
-  document.querySelector("#managed-data").innerText = `${url}, ${block}`;
+initialize();
 
-  res = await browser.storage.sync.get("url");
-  document.querySelector("#url").value = res.url || "URL";
-  res = await browser.storage.sync.get("block");
-  document.querySelector("#block").value = res.block || "Block Element";
+function initialize() {
+  return;
 }
 
-document.addEventListener("DOMContentLoaded", restoreOptions);
-document.querySelector("form").addEventListener("submit", saveOptions);
+function addBlock() {
+  return;
+}
+
+function deleteAll() {
+  return;
+}
+
+function deleteBlock() {
+  return;
+}
+
+function toggleBlock() {
+  return;
+}
