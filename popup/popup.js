@@ -1,15 +1,29 @@
 function listenForClicks() {
   document.addEventListener("click", (e) => {
-    function cnn(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {
-        command: "cnn",
-      });
+    function cnn() {
+      browser.storage.local.set({ run: true }).then(() => {
+        browser.storage.local.get("run").then((result) => {
+          const run = result.run;
+          if (run === undefined) {
+            alert("Error occurred in writing to local storage");
+          }
+
+          alert(run);
+        }, reportError);
+      }, reportError);
     }
 
-    function reset(tabs) {
-      browser.tabs.sendMessage(tabs[0].id, {
-        command: "reset",
-      });
+    function reset() {
+      browser.storage.local.set({ run: false }).then(() => {
+        browser.storage.local.get("run").then((result) => {
+          const run = result.run;
+          if (run === undefined) {
+            alert("Error occurred in writing to local storage");
+          }
+
+          alert(run);
+        }, reportError);
+      }, reportError);
     }
 
     function reportError(error) {
@@ -21,15 +35,9 @@ function listenForClicks() {
     }
 
     if (e.target.type === "reset") {
-      browser.tabs
-        .query({ active: true, currentWindow: true })
-        .then(reset)
-        .catch(reportError);
+      reset();
     } else {
-      browser.tabs
-        .query({ active: true, currentWindow: true })
-        .then(cnn)
-        .catch(reportError);
+      cnn();
     }
   });
 }
@@ -41,6 +49,6 @@ function reportExecuteScriptError(error) {
 }
 
 browser.tabs
-  .executeScript({ file: "/cnn/cnn.js" })
+  .executeScript({ file: "/cnn/test.js" })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);
