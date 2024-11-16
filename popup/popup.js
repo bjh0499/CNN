@@ -1,7 +1,7 @@
 function listenForClicks() {
   document.addEventListener("click", (e) => {
     function cnn() {
-      browser.storage.local.set({ run: true }).then(() => {
+      browser.storage.local.set({ run: true, modify: Date.now() }).then(() => {
         browser.storage.local.get("run").then((result) => {
           const run = result.run;
           if (run === undefined) {
@@ -14,7 +14,7 @@ function listenForClicks() {
     }
 
     function reset() {
-      browser.storage.local.set({ run: false }).then(() => {
+      browser.storage.local.set({ run: false, modify: Date.now() }).then(() => {
         browser.storage.local.get("run").then((result) => {
           const run = result.run;
           if (run === undefined) {

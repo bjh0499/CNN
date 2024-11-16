@@ -22,7 +22,7 @@ function initialize() {
 function displayBlockList(blockList) {
   const arr = [];
   for (let key in blockList) {
-    if (key === "run") {
+    if (key === "run" || key === "modify") {
       continue;
     }
     const obj = { key, ...blockList[key] };
@@ -48,6 +48,7 @@ function addBlock() {
     block: elemInputValue,
     check: true,
   };
+  obj["modify"] = Date.now();
 
   sl.set(obj).then(() => {
     sl.get(key).then((result) => {
@@ -64,7 +65,6 @@ function addBlock() {
 }
 
 function addDiv(result) {
-  console.log(result);
   const div = document.createElement("div");
 
   const check = document.createElement("input");
@@ -90,8 +90,17 @@ function addDiv(result) {
 
 function deleteAll() {
   if (confirm("Are you sure deleting all block list?")) {
+    // TODO: 모든 요소를 활성화
     sl.clear().then(() => {
-      blockContainerDOM.textContent = "";
+      sl.set({ run: false, modify: Date.now() }).then(() => {
+        sl.get("run").then((result) => {
+          if (result.run === undefined) {
+            alert("Error occurred in writing to local storage");
+          }
+
+          blockContainerDOM.textContent = "";
+        }, onError);
+      }, onError);
     }, onError);
   }
   return;
@@ -100,9 +109,11 @@ function deleteAll() {
 function deleteBlock(ev) {
   const key = ev.target.parentNode.id;
   if (confirm("Are you sure deleting this block?")) {
-    console.log(key);
+    // TODO: 삭제하려는 요소를 활성화
     sl.remove(String(key)).then(() => {
-      ev.target.parentNode.remove();
+      sl.set({ modify: Date.now() }).then(() => {
+        ev.target.parentNode.remove();
+      }, onError);
     }, onError);
   }
   return;
@@ -110,7 +121,6 @@ function deleteBlock(ev) {
 
 function toggleBlock(ev) {
   const et = ev.target;
-  console.log(et);
   et.checked = !et.checked;
   const key = String(et.parentNode.id);
   const obj = {};
@@ -120,6 +130,7 @@ function toggleBlock(ev) {
     block: et.nextSibling.nextSibling.textContent,
     check: !et.checked,
   };
+  obj["modify"] = Date.now();
 
   sl.set(obj).then(() => {
     sl.get(key).then((result) => {
