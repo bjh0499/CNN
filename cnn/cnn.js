@@ -1,20 +1,17 @@
-const sl = browser.storage.local;
+import onError from "../util/onError";
 
-function onError(error) {
-  console.log(error);
-}
+const sl = browser.storage.local;
 
 function changeBlockElement(blockList, run) {
   const arr = [];
   for (let key in blockList) {
-    if (key === "run" || key === "modify") {
+    if (key === "run") {
       continue;
     }
     const obj = { key, ...blockList[key] };
     arr.push(obj);
   }
 
-  console.log(arr);
   for (let el of arr) {
     const URI = document.documentURI;
     if (URI.indexOf(el.url) >= 0) {
@@ -24,7 +21,7 @@ function changeBlockElement(blockList, run) {
   }
 }
 
-function applyStorageChange(changes, area) {
+function applyStorageChange(changes) {
   if (changes.run) {
     sl.get(null).then((result) => {
       changeBlockElement(result, changes.run.newValue);
@@ -33,7 +30,7 @@ function applyStorageChange(changes, area) {
     const newItems = {};
 
     for (let key in changes) {
-      if (key === "run" || key === "modify") {
+      if (key === "run") {
         continue;
       }
       newItems[key] = changes[key].newValue;
@@ -45,19 +42,13 @@ function applyStorageChange(changes, area) {
   }
 }
 
-sl.get(null).then((res1) => {
-  const run = res1.run;
-  if (res1.run === undefined) {
-    sl.set({ run: false, modify: Date.now() }).then(() => {
-      sl.get("run").then((res2) => {
-        if (res2.run === undefined) {
-          alert("Error occurred in writing to local storage");
-        }
-      }, onError);
-    }, onError);
+sl.get(null).then((result) => {
+  const run = result.run;
+  if (result.run === undefined) {
+    sl.set({ run: false }).then(() => true, onError);
   }
 
-  changeBlockElement(res1, run);
+  changeBlockElement(result, run);
 }, onError);
 
 browser.storage.onChanged.addListener(applyStorageChange);

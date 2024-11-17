@@ -1,3 +1,7 @@
+import createBlockListArr from "../util/createBlockListArr";
+import createBlockObj from "../util/createBlockObj";
+import onError from "../util/onError";
+
 const sl = browser.storage.local;
 const urlInputDOM = document.querySelector("#urlInput");
 const elemInputDOM = document.querySelector("#elemInput");
@@ -5,10 +9,6 @@ const blockContainerDOM = document.querySelector("#blockContainer");
 
 document.querySelector("#addBlockButton").addEventListener("click", addBlock);
 document.querySelector("#deleteAllButton").addEventListener("click", deleteAll);
-
-function onError(error) {
-  console.log(error);
-}
 
 initialize();
 
@@ -20,48 +20,23 @@ function initialize() {
 }
 
 function displayBlockList(blockList) {
-  const arr = [];
-  for (let key in blockList) {
-    if (key === "run" || key === "modify") {
-      continue;
-    }
-    const obj = { key, ...blockList[key] };
-    arr.push(obj);
-  }
-
+  const arr = createBlockListArr(blockList);
   arr.sort((a, b) => a.key - b.key).forEach(addDiv);
-  return;
 }
 
 function addBlock() {
-  const urlInputValue = urlInputDOM.value.trim();
-  const elemInputValue = elemInputDOM.value.trim();
-  if (!urlInputValue || !elemInputValue) {
+  const url = urlInputDOM.value.trim();
+  const block = elemInputDOM.value.trim();
+  if (!url || !block) {
     alert("Empty value is not allowed");
     return;
   }
-  const key = String(Date.now());
-  const obj = {};
-  obj[key] = {
-    key: key,
-    url: urlInputValue,
-    block: elemInputValue,
-    check: true,
-  };
-  obj["modify"] = Date.now();
+
+  const obj = createBlockObj(String(Date.now()), url, block, true);
 
   sl.set(obj).then(() => {
-    sl.get(key).then((result) => {
-      if (!result[key]) {
-        alert("Error occurred in storage access");
-        return;
-      }
-
-      addDiv(result[key]);
-    }, onError);
+    addDiv(result[key]);
   }, onError);
-
-  return;
 }
 
 function addDiv(result) {
@@ -92,55 +67,35 @@ function deleteAll() {
   if (confirm("Are you sure deleting all block list?")) {
     // TODO: 모든 요소를 활성화
     sl.clear().then(() => {
-      sl.set({ run: false, modify: Date.now() }).then(() => {
-        sl.get("run").then((result) => {
-          if (result.run === undefined) {
-            alert("Error occurred in writing to local storage");
-          }
-
-          blockContainerDOM.textContent = "";
-        }, onError);
+      sl.set({ run: false }).then(() => {
+        blockContainerDOM.textContent = "";
       }, onError);
     }, onError);
   }
-  return;
 }
 
 function deleteBlock(ev) {
-  const key = ev.target.parentNode.id;
+  const parentNode = ev.target.parentNode;
+  const key = parentNode.id;
   if (confirm("Are you sure deleting this block?")) {
     // TODO: 삭제하려는 요소를 활성화
     sl.remove(String(key)).then(() => {
-      sl.set({ modify: Date.now() }).then(() => {
-        ev.target.parentNode.remove();
-      }, onError);
+      parentNode.remove();
     }, onError);
   }
-  return;
 }
 
 function toggleBlock(ev) {
   const et = ev.target;
+  const obj = createBlockObj(
+    et.parentNode.id,
+    et.nextSibling.textContent,
+    et.nextSibling.nextSibling.textContent,
+    et.checked
+  );
+
   et.checked = !et.checked;
-  const key = String(et.parentNode.id);
-  const obj = {};
-  obj[key] = {
-    key,
-    url: et.nextSibling.textContent,
-    block: et.nextSibling.nextSibling.textContent,
-    check: !et.checked,
-  };
-  obj["modify"] = Date.now();
-
   sl.set(obj).then(() => {
-    sl.get(key).then((result) => {
-      if (!result[key]) {
-        alert("Error occurred in storage access");
-        return;
-      }
-
-      et.checked = !et.checked;
-    }, onError);
+    et.checked = !et.checked;
   }, onError);
-  return;
 }

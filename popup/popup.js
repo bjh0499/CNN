@@ -1,29 +1,13 @@
+const sl = browser.storage.local;
+
 function listenForClicks() {
   document.addEventListener("click", (e) => {
     function cnn() {
-      browser.storage.local.set({ run: true, modify: Date.now() }).then(() => {
-        browser.storage.local.get("run").then((result) => {
-          const run = result.run;
-          if (run === undefined) {
-            alert("Error occurred in writing to local storage");
-          }
-
-          alert(run);
-        }, reportError);
-      }, reportError);
+      sl.set({ run: true }).then(() => true, reportError);
     }
 
     function reset() {
-      browser.storage.local.set({ run: false, modify: Date.now() }).then(() => {
-        browser.storage.local.get("run").then((result) => {
-          const run = result.run;
-          if (run === undefined) {
-            alert("Error occurred in writing to local storage");
-          }
-
-          alert(run);
-        }, reportError);
-      }, reportError);
+      sl.set({ run: false }).then(() => true, reportError);
     }
 
     function reportError(error) {
