@@ -1,6 +1,30 @@
-import createBlockListArr from "../util/createBlockListArr";
-import createBlockObj from "../util/createBlockObj";
-import onError from "../util/onError";
+function createBlockListArr(blockList) {
+  const arr = [];
+  for (let key in blockList) {
+    if (key === "run") {
+      continue;
+    }
+    const obj = { key, ...blockList[key] };
+    arr.push(obj);
+  }
+
+  return arr;
+}
+
+function createBlockObj(key, url, block, check) {
+  const obj = {};
+  obj[key] = {
+    key,
+    url,
+    block,
+    check,
+  };
+  return obj;
+}
+
+function onError(err) {
+  console.error(err);
+}
 
 const sl = browser.storage.local;
 const urlInputDOM = document.querySelector("#urlInput");

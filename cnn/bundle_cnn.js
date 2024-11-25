@@ -1,4 +1,6 @@
-import onError from "../util/onError";
+function onError(err) {
+  console.error(err);
+}
 
 const sl = browser.storage.local;
 

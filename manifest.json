@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Clean NAVER News",
-  "version": "1.2.0b",
+  "version": "1.2.0",
 
   "description": "Eliminate comment of NAVER news",
 
@@ -33,7 +33,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["cnn/cnn.js"]
+      "js": ["cnn/bundle_cnn.js"]
     }
   ]
 }
