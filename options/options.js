@@ -12,11 +12,13 @@ document.querySelector("#deleteAllButton").addEventListener("click", deleteAll);
 
 initialize();
 
-function initialize() {
-  sl.get(null).then((result) => {
+async function initialize() {
+  try {
+    const result = await sl.get(null);
     displayBlockList(result);
-  }, onError);
-  return;
+  } catch (err) {
+    onError(err);
+  }
 }
 
 function displayBlockList(blockList) {
@@ -24,7 +26,7 @@ function displayBlockList(blockList) {
   arr.sort((a, b) => a.key - b.key).forEach(addDiv);
 }
 
-function addBlock() {
+async function addBlock() {
   const url = urlInputDOM.value.trim();
   const block = elemInputDOM.value.trim();
   if (!url || !block) {
@@ -35,9 +37,12 @@ function addBlock() {
   const key = String(Date.now());
   const obj = createBlockObj(key, url, block, true);
 
-  sl.set(obj).then(() => {
+  try {
+    await sl.set(obj);
     addDiv(obj[key]);
-  }, onError);
+  } catch (err) {
+    onError(err);
+  }
 }
 
 function addDiv(result) {
@@ -64,9 +69,11 @@ function addDiv(result) {
   blockContainerDOM.append(div);
 }
 
-function deleteAll() {
+async function deleteAll() {
   if (confirm("Are you sure deleting all block list?")) {
-    sl.get(null).then((result) => {
+    try {
+      const result = await sl.get(null);
+
       for (let key in result) {
         if (key === "run") {
           result[key] = false;
@@ -74,33 +81,35 @@ function deleteAll() {
           result[key].check = false;
         }
       }
-      sl.set(result).then(() => {
-        sl.clear().then(() => {
-          sl.set({ run: false }).then(() => {
-            blockContainerDOM.textContent = "";
-          }, onError);
-        }, onError);
-      }, onError);
-    }, onError);
+
+      await sl.set(result);
+      await sl.clear();
+      await sl.set({ run: false });
+
+      blockContainerDOM.textContent = "";
+    } catch (err) {
+      onError(err);
+    }
   }
 }
 
-function deleteBlock(ev) {
+async function deleteBlock(ev) {
   const parentNode = ev.target.parentNode;
   const key = String(parentNode.id);
   if (confirm("Are you sure deleting this block?")) {
-    sl.get(key).then((result) => {
+    try {
+      result = await sl.get(key);
       result[key].check = false;
-      sl.set(result).then(() => {
-        sl.remove(key).then(() => {
-          parentNode.remove();
-        }, onError);
-      }, onError);
-    }, onError);
+      await sl.set(result);
+      await sl.remove(key);
+      parentNode.remove();
+    } catch (err) {
+      onError(err);
+    }
   }
 }
 
-function toggleBlock(ev) {
+async function toggleBlock(ev) {
   const et = ev.target;
   const obj = createBlockObj(
     et.parentNode.id,
@@ -109,8 +118,10 @@ function toggleBlock(ev) {
     et.checked
   );
 
-  et.checked = !et.checked;
-  sl.set(obj).then(() => {
+  try {
+    await sl.set(obj);
+  } catch (err) {
+    onError(err);
     et.checked = !et.checked;
-  }, onError);
+  }
 }

@@ -1,16 +1,10 @@
+import createBlockListArr from "../util/createBlockListArr";
 import onError from "../util/onError";
 
 const sl = browser.storage.local;
 
 function changeBlockElement(blockList, run) {
-  const arr = [];
-  for (let key in blockList) {
-    if (key === "run") {
-      continue;
-    }
-    const obj = { key, ...blockList[key] };
-    arr.push(obj);
-  }
+  const arr = createBlockListArr(blockList);
 
   for (let el of arr) {
     const URI = document.documentURI;
@@ -20,39 +14,46 @@ function changeBlockElement(blockList, run) {
           String(run) === "true" && String(el.check) === "true"
             ? "hidden"
             : "visible";
-      } catch {}
+      } catch (err) {}
     }
   }
 }
 
-function applyStorageChange(changes) {
-  if (changes.run) {
-    sl.get(null).then((result) => {
-      changeBlockElement(result, changes.run.newValue);
-    }, onError);
-  } else {
-    const newItems = {};
+async function applyStorageChange(changes) {
+  const newItems = {};
 
+  if (!changes.run) {
     for (let key in changes) {
       if (key === "run") {
         continue;
       }
       newItems[key] = changes[key].newValue;
     }
+  }
 
-    sl.get("run").then((result) => {
-      changeBlockElement(newItems, result.run);
-    }, onError);
+  try {
+    const result = await sl.get(changes.run ? null : "run");
+    const blockList = changes.run ? result : newItems;
+    const run = changes.run ? changes.run.newValue : result.run;
+    changeBlockElement(blockList, run);
+  } catch (err) {
+    onError(err);
   }
 }
 
-sl.get(null).then((result) => {
-  const run = result.run;
-  if (result.run === undefined) {
-    sl.set({ run: false }).then(() => true, onError);
+(async () => {
+  try {
+    const result = await sl.get(null);
+    const run = result.run;
+
+    if (result.run === undefined) {
+      await sl.set({ run: false });
+    }
+
+    changeBlockElement(result, run);
+  } catch (err) {
+    onError(err);
   }
 
-  changeBlockElement(result, run);
-}, onError);
-
-browser.storage.onChanged.addListener(applyStorageChange);
+  browser.storage.onChanged.addListener(applyStorageChange);
+})();
