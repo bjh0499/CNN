@@ -70,23 +70,41 @@ function addDiv(result) {
 }
 
 async function deleteAll() {
-  if (confirm("Are you sure deleting all block list?")) {
+  if (confirm("Are you sure want to deleting all block list?")) {
     try {
       const result = await sl.get(null);
+      let count = 0;
 
       for (let key in result) {
         if (key === "run") {
           result[key] = false;
         } else {
+          count++;
           result[key].check = false;
         }
       }
 
-      await sl.set(result);
-      await sl.clear();
-      await sl.set({ run: false });
+      if (!count) {
+        return;
+      }
 
-      blockContainerDOM.textContent = "";
+      const time = 10 + parseInt(count / 10);
+
+      setTimeout(() => {
+        sl.set(result);
+      }, time);
+
+      setTimeout(() => {
+        sl.clear();
+      }, time * 2);
+
+      setTimeout(() => {
+        sl.set({ run: false });
+      }, time * 3);
+
+      setTimeout(() => {
+        blockContainerDOM.textContent = "";
+      }, time * 4);
     } catch (err) {
       onError(err);
     }
@@ -96,7 +114,7 @@ async function deleteAll() {
 async function deleteBlock(ev) {
   const parentNode = ev.target.parentNode;
   const key = String(parentNode.id);
-  if (confirm("Are you sure deleting this block?")) {
+  if (confirm("Are you sure want to deleting this block?")) {
     try {
       result = await sl.get(key);
       result[key].check = false;

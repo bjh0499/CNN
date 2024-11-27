@@ -35,11 +35,6 @@ function changeBlockElement(blockList, run) {
 
 async function applyStorageChange(changes) {
   const newItems = {};
-  alert("start");
-  for (let key in changes) {
-    alert(String(key));
-  }
-  alert("end");
 
   if (!changes.run) {
     for (let key in changes) {
@@ -54,7 +49,6 @@ async function applyStorageChange(changes) {
     const result = await sl.get(changes.run ? null : "run");
     const blockList = changes.run ? result : newItems;
     const run = changes.run ? changes.run.newValue : result.run;
-    alert(`${run}...`);
     changeBlockElement(blockList, run);
   } catch (err) {
     onError(err);
