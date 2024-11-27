@@ -4,13 +4,13 @@
 
 export default [
   {
-    input: "options/options.js",
+    input: "src/options.js",
     output: {
       file: "options/bundle_options.js",
     },
   },
   {
-    input: "cnn/cnn.js",
+    input: "src/cnn.js",
     output: {
       file: "cnn/bundle_cnn.js",
     },
