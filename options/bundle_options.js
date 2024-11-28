@@ -112,7 +112,6 @@ async function deleteAll() {
         return;
       }
 
-      // TODO: Timeout으로 지연?
       const time = 10 + count;
 
       setTimeout(() => {
