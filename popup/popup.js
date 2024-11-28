@@ -10,6 +10,8 @@ function listenForClicks() {
       sl.set({ run: false }).then(() => true, reportError);
     }
 
+    function select() {}
+
     function reportError(error) {
       console.error(`Could not clear page: ${error}`);
     }
@@ -20,6 +22,8 @@ function listenForClicks() {
 
     if (e.target.type === "reset") {
       reset();
+    } else if (e.target.id === "selectButton") {
+      select();
     } else {
       cnn();
     }
