@@ -112,7 +112,7 @@ async function deleteAll() {
         return;
       }
 
-      const time = 10 + count;
+      const time = 10 + parseInt(count / 10);
 
       setTimeout(() => {
         sl.set(result);

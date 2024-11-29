@@ -11,17 +11,17 @@ function listenForClicks() {
     }
 
     function commandTabs(tabs) {
-      for (const tab of tabs) {
-        browser.tabs
-          .sendMessage(tab.id, {
-            command: "test",
-          })
-          .then(() => true, reportError2);
-      }
+      browser.tabs
+        .sendMessage(tabs[0].id, {
+          command: "test",
+        })
+        .then(() => true, reportError2);
     }
 
     function select() {
-      browser.tabs.query({}).then(commandTabs, reportError2);
+      browser.tabs
+        .query({ active: true, currentWindow: true })
+        .then(commandTabs, reportError2);
     }
 
     function reportError(error) {
@@ -53,6 +53,6 @@ function reportExecuteScriptError(error) {
 }
 
 browser.tabs
-  .executeScript({ file: "/cnn/test.js" })
+  .executeScript({ file: "/cnn/messageListener.js" })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);
