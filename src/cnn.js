@@ -42,6 +42,12 @@ async function applyStorageChange(changes) {
 }
 
 (async () => {
+  if (window.hasRun) {
+    return;
+  }
+
+  window.hasRun = true;
+
   try {
     const result = await sl.get(null);
     const run = result.run;
@@ -56,4 +62,10 @@ async function applyStorageChange(changes) {
   }
 
   browser.storage.onChanged.addListener(applyStorageChange);
+
+  browser.runtime.onMessage.addListener((message) => {
+    if (message.command === "test") {
+      console.log("TEST");
+    }
+  });
 })();

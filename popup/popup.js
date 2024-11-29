@@ -10,10 +10,26 @@ function listenForClicks() {
       sl.set({ run: false }).then(() => true, reportError);
     }
 
-    function select() {}
+    function commandTabs(tabs) {
+      for (const tab of tabs) {
+        browser.tabs
+          .sendMessage(tab.id, {
+            command: "test",
+          })
+          .then(() => true, reportError2);
+      }
+    }
+
+    function select() {
+      browser.tabs.query({}).then(commandTabs, reportError2);
+    }
 
     function reportError(error) {
       console.error(`Could not clear page: ${error}`);
+    }
+
+    function reportError2(error) {
+      console.error(`Could not command to page: ${error}`);
     }
 
     if (e.target.tagName !== "BUTTON" || !e.target.closest("#popup-content")) {
