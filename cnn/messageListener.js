@@ -3,14 +3,32 @@
     return;
   }
 
+  const body = document.querySelector("body");
+
   function test2(ev) {
     ev.stopImmediatePropagation();
     ev.preventDefault();
-    document.querySelector("body").removeEventListener("click", test2);
+
+    body.removeEventListener("click", test2);
+    body.removeEventListener("mouseover", test3);
+  }
+
+  function test3(ev) {
+    if (ev.target.id === "cnnSelector") {
+      return;
+    }
+
+    const prevCnnSelector = document.querySelector("#cnnSelector");
+    if (prevCnnSelector) {
+      prevCnnSelector.remove();
+    }
+
+    console.log(ev.target);
   }
 
   function test() {
-    document.querySelector("body").addEventListener("click", test2, true);
+    body.addEventListener("click", test2, true);
+    body.addEventListener("mouseover", test3);
   }
 
   window.hasRun = true;
