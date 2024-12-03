@@ -4,56 +4,38 @@
   }
 
   const body = document.querySelector("body");
-  let tmp;
+  const MOUSE_VISITED_CLASSNAME = "crx_mouse_visited";
+  let prevDOM = null;
 
-  function test2(ev) {
+  function handleClick(ev) {
     ev.stopImmediatePropagation();
     ev.preventDefault();
-    console.log(tmp);
 
-    body.removeEventListener("click", test2);
-    body.removeEventListener("mouseover", test3);
+    body.removeEventListener("click", handleClick);
+    body.removeEventListener("mouseover", inspector);
 
-    const prevCnnSelector = document.querySelector("#cnnSelector");
-    if (prevCnnSelector) {
-      prevCnnSelector.remove();
+    if (prevDOM != null) {
+      prevDOM.classList.remove(MOUSE_VISITED_CLASSNAME);
     }
   }
 
-  function test3(ev) {
-    if (ev.target.id === "cnnSelector") {
-      return;
+  function inspector(ev) {
+    // https://stackoverflow.com/questions/4445102/google-chrome-extension-highlight-the-div-that-the-mouse-is-hovering-over
+    const srcElement = ev.srcElement;
+
+    if (prevDOM != srcElement) {
+      if (prevDOM != null) {
+        prevDOM.classList.remove(MOUSE_VISITED_CLASSNAME);
+      }
+
+      srcElement.classList.add(MOUSE_VISITED_CLASSNAME);
+      prevDOM = srcElement;
     }
-
-    const prevCnnSelector = document.querySelector("#cnnSelector");
-    if (prevCnnSelector) {
-      prevCnnSelector.remove();
-    }
-
-    const rect = ev.target.getBoundingClientRect();
-    console.log(ev.target);
-    console.log(rect);
-    tmp = ev.target;
-
-    const cnnSelector = document.createElement("div");
-    cnnSelector.id = "cnnSelector";
-    cnnSelector.style.position = "fixed";
-    cnnSelector.style.width = `${rect.width}px`;
-    cnnSelector.style.height = `${rect.height}px`;
-    cnnSelector.style.left = `${rect.left}px`;
-    cnnSelector.style.top = `${rect.top}px`;
-    cnnSelector.style.zIndex = "100";
-    cnnSelector.style.backgroundColor = "red";
-    body.append(cnnSelector);
-
-    setTimeout(() => {
-      cnnSelector.remove();
-    }, 100);
   }
 
   function test() {
-    body.addEventListener("click", test2, true);
-    body.addEventListener("mouseover", test3);
+    body.addEventListener("click", handleClick, true);
+    body.addEventListener("mouseover", inspector);
   }
 
   window.hasRun = true;

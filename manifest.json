@@ -33,6 +33,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
+      "css": ["cnn/marker.css"],
       "js": ["cnn/bundle_cnn.js"]
     }
   ]
