@@ -16,6 +16,30 @@
 
     if (prevDOM != null) {
       prevDOM.classList.remove(MOUSE_VISITED_CLASSNAME);
+
+      const DOMtree = [];
+
+      while (1) {
+        DOMtree.push(prevDOM.nodeName);
+        if (String(prevDOM.nodeName) === "BODY") {
+          break;
+        }
+        prevDOM = prevDOM.parentNode;
+      }
+
+      console.log(DOMtree);
+
+      let str = `${String(DOMtree.pop()).toLowerCase()}`;
+
+      console.log(DOMtree);
+
+      while (DOMtree.length) {
+        str += ` > ${String(DOMtree.pop()).toLowerCase()}`;
+      }
+
+      console.log(str);
+
+      prevDOM = null;
     }
   }
 
