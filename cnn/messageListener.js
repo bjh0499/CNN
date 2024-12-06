@@ -17,30 +17,38 @@
     if (prevDOM != null) {
       prevDOM.classList.remove(MOUSE_VISITED_CLASSNAME);
 
-      const DOMtree = [];
+      const arr = [];
 
-      while (1) {
-        DOMtree.push(prevDOM.nodeName);
-        if (String(prevDOM.nodeName) === "BODY") {
-          break;
-        }
-        prevDOM = prevDOM.parentNode;
+      DOMsearch(body, prevDOM, arr, 0);
+
+      let selector = `body:nth-child(${arr.pop()})`;
+
+      while (arr.length) {
+        selector += ` :nth-child(${arr.pop()})`;
       }
-
-      console.log(DOMtree);
-
-      let str = `${String(DOMtree.pop()).toLowerCase()}`;
-
-      console.log(DOMtree);
-
-      while (DOMtree.length) {
-        str += ` > ${String(DOMtree.pop()).toLowerCase()}`;
-      }
-
-      console.log(str);
 
       prevDOM = null;
     }
+  }
+
+  function DOMsearch(dom, target, arr, level) {
+    const childDomList = dom.children;
+    let idx = 1;
+
+    if (dom === target) {
+      return true;
+    }
+
+    for (let childDom of childDomList) {
+      if (DOMsearch(childDom, target, arr, level + 1)) {
+        arr.push(idx);
+        return true;
+      }
+
+      idx++;
+    }
+
+    return false;
   }
 
   function inspector(ev) {
