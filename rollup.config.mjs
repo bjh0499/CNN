@@ -15,4 +15,10 @@ export default [
       file: "cnn/bundle_cnn.js",
     },
   },
+  {
+    input: "src/messageListener.js",
+    output: {
+      file: "cnn/bundle_messageListener.js",
+    },
+  },
 ];

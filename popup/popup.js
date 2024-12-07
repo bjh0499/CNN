@@ -53,6 +53,6 @@ function reportExecuteScriptError(error) {
 }
 
 browser.tabs
-  .executeScript({ file: "/cnn/messageListener.js" })
+  .executeScript({ file: "/cnn/bundle_messageListener.js" })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);

@@ -1,3 +1,6 @@
+import createBlockObj from "../util/createBlockObj";
+import onError from "../util/onError";
+
 (function () {
   if (window.hasRun) {
     return;
@@ -7,7 +10,7 @@
   const MOUSE_VISITED_CLASSNAME = "crx_mouse_visited";
   let prevDOM = null;
 
-  function handleClick(ev) {
+  async function handleClick(ev) {
     ev.stopImmediatePropagation();
     ev.preventDefault();
 
@@ -19,12 +22,39 @@
 
       const arr = [];
 
-      DOMsearch(body, prevDOM, arr, 0);
+      let selector;
 
-      let selector = `body:nth-child(${arr.pop()})`;
+      if (String(prevDOM.id) === "") {
+        DOMsearch(body, prevDOM, arr, 0);
 
-      while (arr.length) {
-        selector += ` :nth-child(${arr.pop()})`;
+        selector = "body";
+
+        while (arr.length) {
+          selector += ` > :nth-child(${arr.pop()})`;
+        }
+      } else {
+        selector = prevDOM.id;
+      }
+
+      if (confirm(`Are you sure to block this element? ${selector}`)) {
+        try {
+          const sl = browser.storage.local;
+          const parsedUrl = new URL(window.location.href);
+          const obj = createBlockObj(
+            String(Date.now()),
+            parsedUrl.origin,
+            selector,
+            true
+          );
+          await sl.set(obj);
+          const res = await sl.get(null);
+          for (let key in res) {
+            console.log(key);
+          }
+          console.log("OK");
+        } catch (err) {
+          onError(err);
+        }
       }
 
       prevDOM = null;
