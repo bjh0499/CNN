@@ -8,7 +8,7 @@ function changeBlockElement(blockList, run) {
 
   for (let el of arr) {
     const URI = document.documentURI;
-    if (URI.indexOf(el.url) >= 0) {
+    if (el.url && URI.indexOf(el.url) >= 0) {
       try {
         document.querySelector(el.block).style.visibility =
           String(run) === "true" && String(el.check) === "true"
@@ -42,11 +42,12 @@ async function applyStorageChange(changes) {
 }
 
 (async () => {
+  let result, run;
   try {
-    const result = await sl.get(null);
-    const run = result.run;
+    result = await sl.get(null);
+    run = result.run;
 
-    if (result.run === undefined) {
+    if (run === undefined) {
       await sl.set({ run: false });
     }
 
@@ -56,4 +57,30 @@ async function applyStorageChange(changes) {
   }
 
   browser.storage.onChanged.addListener(applyStorageChange);
+
+  // https://stackoverflow.com/questions/17986020/chrome-extension-javascript-to-detect-dynamically-loaded-content
+  function blockForNewElement(records, observer) {
+    const arr = createBlockListArr(result);
+
+    for (let el of arr) {
+      const URI = document.documentURI;
+      if (el.url && URI.indexOf(el.url) >= 0) {
+        try {
+          const blockEl = document.querySelector(el.block);
+          if (blockEl) {
+            blockEl.style.visibility =
+              String(run) === "true" && String(el.check) === "true"
+                ? "hidden"
+                : "visible";
+          }
+        } catch (err) {}
+      }
+    }
+  }
+
+  const observer = new MutationObserver(blockForNewElement);
+  observer.observe(document.querySelector("body"), {
+    childList: true,
+    subtree: true,
+  });
 })();
