@@ -45,7 +45,7 @@ function onError(err) {
           selector += ` > :nth-child(${arr.pop()})`;
         }
       } else {
-        selector = prevDOM.id;
+        selector = `#${prevDOM.id}`;
       }
 
       if (confirm(`Are you sure to block this element? ${selector}`)) {
@@ -59,11 +59,6 @@ function onError(err) {
             true
           );
           await sl.set(obj);
-          const res = await sl.get(null);
-          for (let key in res) {
-            console.log(key);
-          }
-          console.log("OK");
         } catch (err) {
           onError(err);
         }

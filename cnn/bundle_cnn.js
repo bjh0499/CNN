@@ -72,11 +72,11 @@ async function applyStorageChange(changes) {
 
   browser.storage.onChanged.addListener(applyStorageChange);
 
+  // https://stackoverflow.com/questions/17986020/chrome-extension-javascript-to-detect-dynamically-loaded-content
   function blockForNewElement(records, observer) {
     const arr = createBlockListArr(result);
 
     for (let el of arr) {
-      console.log(el);
       const URI = document.documentURI;
       if (el.url && URI.indexOf(el.url) >= 0) {
         try {
