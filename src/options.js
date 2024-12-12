@@ -13,12 +13,36 @@ document.querySelector("#deleteAllButton").addEventListener("click", deleteAll);
 initialize();
 
 async function initialize() {
+  blockContainerInitialize();
+
   try {
     const result = await sl.get(null);
     displayBlockList(result);
   } catch (err) {
     onError(err);
   }
+}
+
+function blockContainerInitialize() {
+  const div = document.createElement("div");
+  div.className = "blockList";
+
+  const checkHeaderDiv = document.createElement("div");
+  const urlHeaderDiv = document.createElement("div");
+  const blockHeaderDiv = document.createElement("div");
+  const delButtonHeaderDiv = document.createElement("div");
+
+  checkHeaderDiv.textContent = "Block Check";
+  urlHeaderDiv.textContent = "URL";
+  blockHeaderDiv.textContent = "Block Element";
+  delButtonHeaderDiv.textContent = "Remove";
+
+  div.append(checkHeaderDiv, urlHeaderDiv, blockHeaderDiv, delButtonHeaderDiv);
+  for (const childDiv of div.childNodes) {
+    childDiv.classList.add("margin-5", "divHeader");
+  }
+
+  blockContainerDOM.append(div);
 }
 
 function displayBlockList(blockList) {
@@ -48,9 +72,11 @@ async function addBlock() {
 function addDiv(result) {
   const div = document.createElement("div");
 
+  const checkDiv = document.createElement("div");
   const check = document.createElement("input");
   const urlDiv = document.createElement("div");
   const blockDiv = document.createElement("div");
+  const delButtonDiv = document.createElement("div");
   const delButton = document.createElement("button");
 
   div.id = result.key;
@@ -62,10 +88,17 @@ function addDiv(result) {
   check.type = "checkbox";
   check.checked = result.check;
   check.addEventListener("change", (ev) => toggleBlock(ev));
+  checkDiv.append(check);
 
   delButton.addEventListener("click", (ev) => deleteBlock(ev));
+  delButton.textContent = "Remove";
+  delButtonDiv.append(delButton);
 
-  div.append(check, urlDiv, blockDiv, delButton);
+  div.append(checkDiv, urlDiv, blockDiv, delButtonDiv);
+  for (const childDiv of div.childNodes) {
+    childDiv.classList.add("margin-5", "divCell");
+  }
+
   blockContainerDOM.append(div);
 }
 
@@ -104,6 +137,7 @@ async function deleteAll() {
 
       setTimeout(() => {
         blockContainerDOM.textContent = "";
+        blockContainerInitialize();
       }, time * 4);
     } catch (err) {
       onError(err);
@@ -112,7 +146,7 @@ async function deleteAll() {
 }
 
 async function deleteBlock(ev) {
-  const parentNode = ev.target.parentNode;
+  const parentNode = ev.target.parentNode.parentNode;
   const key = String(parentNode.id);
   if (confirm("Are you sure want to deleting this block?")) {
     try {

@@ -4,4 +4,19 @@
 
 .blockList {
   display: flex;
+  width: 100%;
+  max-width: 800px;
+}
+
+.divHeader {
+  font-weight: bold;
+  width: 25%;
+  box-sizing: border-box;
+  flex-grow: 1;
+}
+
+.divCell {
+  width: 25%;
+  box-sizing: border-box;
+  flex-grow: 1;
 }
