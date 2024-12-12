@@ -102,7 +102,7 @@ function onError(err) {
     }
   }
 
-  function test() {
+  function enableInspector() {
     body.addEventListener("click", handleClick, true);
     body.addEventListener("mouseover", inspector);
   }
@@ -110,8 +110,8 @@ function onError(err) {
   window.hasRun = true;
 
   browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "test") {
-      test();
+    if (message.command === "inspector") {
+      enableInspector();
     }
   });
 })();

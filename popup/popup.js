@@ -13,7 +13,7 @@ function listenForClicks() {
     function commandTabs(tabs) {
       browser.tabs
         .sendMessage(tabs[0].id, {
-          command: "test",
+          command: "inspector",
         })
         .then(() => true, reportError2);
     }

@@ -90,7 +90,7 @@ import onError from "../util/onError";
     }
   }
 
-  function test() {
+  function enableInspector() {
     body.addEventListener("click", handleClick, true);
     body.addEventListener("mouseover", inspector);
   }
@@ -98,8 +98,8 @@ import onError from "../util/onError";
   window.hasRun = true;
 
   browser.runtime.onMessage.addListener((message) => {
-    if (message.command === "test") {
-      test();
+    if (message.command === "inspector") {
+      enableInspector();
     }
   });
 })();
