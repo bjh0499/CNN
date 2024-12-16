@@ -54,6 +54,16 @@ async function applyStorageChange(changes) {
     const result = await sl.get(changes.run ? null : "run");
     const blockList = changes.run ? result : newItems;
     const run = changes.run ? changes.run.newValue : result.run;
+
+    if (changes.run) {
+      const URI = document.documentURI;
+      for (let key in result) {
+        el = result[key];
+        if (el.url && URI.indexOf(el.url) < 0) {
+          result[key] = undefined;
+        }
+      }
+    }
     changeBlockElement(blockList, run);
   } catch (err) {
     onError(err);
@@ -65,9 +75,18 @@ async function applyStorageChange(changes) {
   try {
     result = await sl.get(null);
     run = result.run;
+    const URI = document.documentURI;
+    console.log(URI);
 
     if (run === undefined) {
       await sl.set({ run: false });
+    }
+
+    for (let key in result) {
+      el = result[key];
+      if (el.url && URI.indexOf(el.url) < 0) {
+        result[key] = undefined;
+      }
     }
 
     changeBlockElement(result, run);
