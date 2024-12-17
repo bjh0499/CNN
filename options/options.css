@@ -2,6 +2,10 @@
   margin: 5px;
 }
 
+.padding-5 {
+  padding: 5px;
+}
+
 .blockList {
   display: flex;
   width: 100%;
@@ -19,4 +23,5 @@
   width: 25%;
   box-sizing: border-box;
   flex-grow: 1;
+  overflow-wrap: break-word;
 }

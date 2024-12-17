@@ -39,7 +39,7 @@ function blockContainerInitialize() {
 
   div.append(checkHeaderDiv, urlHeaderDiv, blockHeaderDiv, delButtonHeaderDiv);
   for (const childDiv of div.childNodes) {
-    childDiv.classList.add("margin-5", "divHeader");
+    childDiv.classList.add("padding-5", "divHeader");
   }
 
   blockContainerDOM.append(div);
@@ -96,7 +96,7 @@ function addDiv(result) {
 
   div.append(checkDiv, urlDiv, blockDiv, delButtonDiv);
   for (const childDiv of div.childNodes) {
-    childDiv.classList.add("margin-5", "divCell");
+    childDiv.classList.add("padding-5", "divCell");
   }
 
   blockContainerDOM.append(div);
