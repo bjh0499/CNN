@@ -164,9 +164,9 @@ async function deleteBlock(ev) {
 async function toggleBlock(ev) {
   const et = ev.target;
   const obj = createBlockObj(
-    et.parentNode.id,
-    et.nextSibling.textContent,
-    et.nextSibling.nextSibling.textContent,
+    et.parentNode.parentNode.id,
+    et.parentNode.nextSibling.textContent,
+    et.parentNode.nextSibling.nextSibling.textContent,
     et.checked
   );
 
