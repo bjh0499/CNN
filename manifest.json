@@ -10,13 +10,13 @@
     "48": "icons/swearing.png"
   },
 
-  "permissions": ["activeTab", "storage", "tabs"],
+  "permissions": ["scripting", "activeTab", "storage", "tabs"],
 
   "options_ui": {
     "page": "/options/options.html"
   },
 
-  "browser_action": {
+  "action": {
     "default_icon": "icons/swearing.png",
     "theme_icons": [
       {

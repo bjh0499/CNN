@@ -1,3 +1,7 @@
+if (!("browser" in self)) {
+  self.browser = self.chrome;
+}
+
 const sl = browser.storage.local;
 
 function listenForClicks() {
@@ -52,7 +56,11 @@ function reportExecuteScriptError(error) {
   console.error(`Failed to execute CNN content script: ${error.message}`);
 }
 
-browser.tabs
-  .executeScript({ file: "/cnn/bundle_messageListener.js" })
+let tab = await getCurrentTab();
+browser.scripting
+  .executeScript({
+    target: { tabId: tab.id },
+    files: ["/cnn/bundle_messageListener.js"],
+  })
   .then(listenForClicks)
   .catch(reportExecuteScriptError);

@@ -2,6 +2,10 @@ import createBlockListArr from "../util/createBlockListArr";
 import createBlockObj from "../util/createBlockObj";
 import onError from "../util/onError";
 
+if (!("browser" in self)) {
+  self.browser = self.chrome;
+}
+
 const sl = browser.storage.local;
 const urlInputDOM = document.querySelector("#urlInput");
 const elemInputDOM = document.querySelector("#elemInput");

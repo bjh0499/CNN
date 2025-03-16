@@ -6,6 +6,10 @@ import onError from "../util/onError";
     return;
   }
 
+  if (!("browser" in self)) {
+    self.browser = self.chrome;
+  }
+
   const body = document.querySelector("body");
   const MOUSE_VISITED_CLASSNAME = "crx_mouse_visited";
   let prevDOM = null;
