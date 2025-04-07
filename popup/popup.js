@@ -56,11 +56,25 @@ function reportExecuteScriptError(error) {
   console.error(`Failed to execute CNN content script: ${error.message}`);
 }
 
-let tab = await getCurrentTab();
-browser.scripting
-  .executeScript({
-    target: { tabId: tab.id },
-    files: ["/cnn/bundle_messageListener.js"],
-  })
-  .then(listenForClicks)
-  .catch(reportExecuteScriptError);
+function getTabId() {
+  return new Promise((resolve, reject) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length > 0) {
+        resolve(tabs[0].id);
+      } else {
+        reject(new Error("No active tab found"));
+      }
+    });
+  });
+}
+
+(async () => {
+  let currentTabId = await getTabId();
+  browser.scripting
+    .executeScript({
+      target: { tabId: currentTabId },
+      files: ["/cnn/bundle_messageListener.js"],
+    })
+    .then(listenForClicks)
+    .catch(reportExecuteScriptError);
+})();
