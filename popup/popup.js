@@ -1,3 +1,7 @@
+if (!("browser" in self)) {
+  self.browser = self.chrome;
+}
+
 const sl = browser.storage.local;
 
 function listenForClicks() {
@@ -52,7 +56,25 @@ function reportExecuteScriptError(error) {
   console.error(`Failed to execute CNN content script: ${error.message}`);
 }
 
-browser.tabs
-  .executeScript({ file: "/cnn/bundle_messageListener.js" })
-  .then(listenForClicks)
-  .catch(reportExecuteScriptError);
+function getTabId() {
+  return new Promise((resolve, reject) => {
+    browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs.length > 0) {
+        resolve(tabs[0].id);
+      } else {
+        reject(new Error("No active tab found"));
+      }
+    });
+  });
+}
+
+(async () => {
+  let currentTabId = await getTabId();
+  browser.scripting
+    .executeScript({
+      target: { tabId: currentTabId },
+      files: ["/cnn/bundle_messageListener.js"],
+    })
+    .then(listenForClicks)
+    .catch(reportExecuteScriptError);
+})();

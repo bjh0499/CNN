@@ -1,6 +1,10 @@
 import createBlockListArr from "../util/createBlockListArr";
 import onError from "../util/onError";
 
+if (!("browser" in self)) {
+  self.browser = self.chrome;
+}
+
 const sl = browser.storage.local;
 
 function applyVisibilityStyle(arr, run) {
